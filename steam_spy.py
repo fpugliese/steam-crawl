@@ -15,22 +15,34 @@ def main():
     page = 0
     params = {"request": "all", "page": page}
 
+    all_data = []
+
     while page < 100:
         data = request_api.request(url, params=params)
-        steam_spy_all = pandas.DataFrame.from_dict(data, orient='index')
-        steam_spy_all.to_csv(f"data/steam_spy_all_page{page}.csv", index_label="appid")
-        print(f"Foram salvos {len(steam_spy_all)} appids no arquivo data/steam_spy_all_page{page}.csv")
+
+        all_data.extend(data)
+
+        #steam_spy_all = pandas.DataFrame.from_dict(data, orient='index')
+        #steam_spy_all.to_csv(f"data/steam_spy/all_page{page}.csv", index_label="appid")
+        #print(f"Foram salvos {len(steam_spy_all)} appids no arquivo data/steam_spy/all_page{page}.csv")
         page += 1
         params = {"request": "all", "page": page}
 
         # Se a quantidade de appids for menor que 1000, interrompe o loop
-        if len(steam_spy_all) < 1000:
+        if len(data) < 1000:
             print("Menos de 1000 appids encontrados, finalizando a coleta.")
             break
 
         # Segue o loop
         time.sleep(1)  # Aguarda 1 segundo entre as requisições para não sobrecarregar o servidor
         print(f"Indo para a página {page}...")
-        
+
+    steam_spy_all = pandas.DataFrame(all_data)
+    steam_spy_all.sort_values(by='appid', inplace=True)
+
+    steam_spy_all.to_csv("data/steam_spy/all_data.csv", index_label="appid")
+    print("Todos os dados foram salvos em data/steam_spy/all_data.csv")
+
+
 if __name__ == "__main__":
     main()
