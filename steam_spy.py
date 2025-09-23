@@ -20,11 +20,10 @@ def main():
     while page < 100:
         data = request_api.request(url, params=params)
 
-        all_data.extend(data)
+        # Concatena os dados obtidos com os dados anteriores
+        all_data = pandas.concat([pandas.DataFrame.from_dict(data, orient='index'), pandas.DataFrame(all_data)], ignore_index=True)
+        print(f"Foram encontrados {len(data)} appids na página {page}.")
 
-        #steam_spy_all = pandas.DataFrame.from_dict(data, orient='index')
-        #steam_spy_all.to_csv(f"data/steam_spy/all_page{page}.csv", index_label="appid")
-        #print(f"Foram salvos {len(steam_spy_all)} appids no arquivo data/steam_spy/all_page{page}.csv")
         page += 1
         params = {"request": "all", "page": page}
 
@@ -38,9 +37,9 @@ def main():
         print(f"Indo para a página {page}...")
 
     steam_spy_all = pandas.DataFrame(all_data)
-    steam_spy_all.sort_values(by='appid', inplace=True)
+    games = steam_spy_all.sort_values(by = 'appid').reset_index(drop=True)
 
-    steam_spy_all.to_csv("data/steam_spy/all_data.csv", index_label="appid")
+    games.to_csv("data/steam_spy/all_data.csv")
     print("Todos os dados foram salvos em data/steam_spy/all_data.csv")
 
 
