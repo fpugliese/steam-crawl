@@ -27,5 +27,5 @@ def request(url, params=None):
         return request(url, params)
     else:
         # Caso contrário, imprimimos o código de status da resposta
-        print(f"Erro na resposta da API: {response.status_code}")
+        print(f"Erro na resposta da API: {response.status_code} - Parametros: {params}")
         return None
