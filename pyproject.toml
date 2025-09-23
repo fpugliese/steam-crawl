@@ -1,7 +1,10 @@
 [project]
 name = "steam-crawl"
 version = "0.1.0"
-description = "Add your description here"
+description = "Projeto que pega informações de jogos da Steam através da API da SteamSPY e da API da própria Steam"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "pandas>=2.3.2",
+    "requests>=2.32.5",
+]
