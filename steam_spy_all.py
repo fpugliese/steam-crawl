@@ -17,6 +17,21 @@ def main():
 
     all_data = []
 
+    while True:
+        choice = input("Deseja fazer o download de todas as informacoes disponiveis?"
+        "Caso digite no, salvaremos apenas o appid e o nome do jogo. (yes/no): ")
+        if choice.lower() in ["yes", "y"]:
+            print("Baixando todas as informacoes...")
+            choice = True
+            break
+        elif choice.lower() in ["no", "n"]:
+            print("Baixando apenas nome e ID...")
+            choice = False
+            break
+        else:
+            print("Escolha invalida. Escolha yes/no.")
+
+
     while page < 100:
         data = request_api.request(url, params=params)
 
@@ -37,10 +52,15 @@ def main():
         print(f"Indo para a página {page}...")
 
     steam_spy_all = pandas.DataFrame(all_data)
-    games = steam_spy_all.sort_values(by = 'appid').reset_index(drop=True)
 
-    games.to_csv("data/steam_spy/all_data.csv")
-    print("Todos os dados foram salvos em data/steam_spy/all_data.csv")
+    if choice:
+        games = steam_spy_all.sort_values(by = 'appid').reset_index(drop=True)
+        games.to_csv("data/steam_spy/all_data.csv")
+        print("Todos os dados foram salvos em data/steam_spy/all_data.csv")
+    else:
+        games = steam_spy_all[["appid", "name"]].sort_values(by = 'appid').reset_index(drop=True)
+        games.to_csv("data/steam_spy/all_data_id_name.csv")
+        print("Todos os dados foram salvos em data/steam_spy/all_data_id_name.csv")
 
 
 if __name__ == "__main__":
