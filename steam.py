@@ -9,7 +9,7 @@ def parse_steam_request(appid, name):
     url = "http://store.steampowered.com/api/appdetails/"
     parameters = {"appids": appid}
     
-    json_data = request_api.request(url, parameters=parameters)
+    json_data = request_api.request(url, params=parameters)
     json_app_data = json_data[str(appid)]
     
     if json_app_data['success']:
@@ -23,7 +23,7 @@ def main():
     # Set file parameters
     download_path = './data/steam_store/'
     steam_app_data = 'steam_app_data.csv'
-    steam_index = './data/steam_index.txt'
+    steam_index = 'steam_index.txt'
 
     try:
         app_list = pd.read_csv('./data/steam_spy/all_data_id_name.csv')
@@ -46,7 +46,7 @@ def main():
     ]
 
     # Overwrites last index for demonstration (would usually store highest index so can continue across sessions)
-    request_api.reset_index(download_path, steam_index)
+    #request_api.reset_index(download_path, steam_index)
 
     # Retrieve last index downloaded from file
     index = request_api.get_index(download_path, steam_index)
@@ -63,7 +63,7 @@ def main():
         index_filename=steam_index,
         columns=steam_columns,
         begin=index,
-        end=10,
+        end=20,
         batchsize=5
     )    
 
