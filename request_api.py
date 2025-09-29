@@ -1,7 +1,7 @@
-# Description: Esse código lê os IDs dos jogos da Steam a partir de requests
-# da API do site Steam Spy e salva esses IDs em um arquivo CSV.
-# Autor: Fernando Melo Pugliese
-# Documentação: https://steamspy.com/api.php
+# This code contains most of the logic behind the requests to the remote APIs.
+# Most of the code present here is from a project by Nik Davis, "steam-data-science-project":
+# https://github.com/nik-davis/steam-data-science-project
+
 import requests
 import time
 import numpy as np
@@ -14,32 +14,31 @@ import pandas as pd
 def request(url, params=None):
     try:
         response = requests.get(url, params=params)
-        response.raise_for_status()  # Verifica se houve algum erro na requisição
+        response.raise_for_status()
     except requests.exceptions.RequestException as e:
-        # Caso ocorra algum erro na requisição, ele será capturado aqui
-        print(f"Erro ao fazer a requisição: {e}")
-        # Aguardamos 10 segundos antes de tentar novamente
+        print(f"Error during the request: {e}")
         time.sleep(10)
+        # Should we find an error, we wait ten seconds and try again.
         return request(url, params)
     
     if response.status_code == 200:
-        # Se a resposta for bem-sucedida, retornamos o conteúdo JSON
         return response.json()
     elif response == None:
-        # Se a resposta for None, provavelmente excedemos a quantidade de tentativas,
-        # aguardamos 10 segundos e tentamos novamente
+        # This probably indicates that we exceeded the limit rate on the requests, 
+        # We just wait 10 seconds and try again.
         print("Sem resposta, tentando novamente em 10 segundos...")
         time.sleep(10)
         return request(url, params)
     else:
-        # Caso contrário, imprimimos o código de status da resposta
-        print(f"Erro na resposta da API: {response.status_code} - Parametros: {params}")
+        # Should anything else happens, we print the error.
+        print(f"Error in the API response: {response.status_code} - Parameters: {params}")
         return None
     
 #-------------------------------------------------------------
 
 def get_app_data(start, stop, parser, pause):
-    """Return list of app data generated from parser.
+    """
+    Return list of app data generated from parser.
     
     parser : function to handle request
     """
@@ -48,10 +47,10 @@ def get_app_data(start, stop, parser, pause):
     try:
         app_list = pd.read_csv('./data/steam_spy/all_data_id_name.csv')
     except FileNotFoundError:
-        print("Arquivo 'all_data_id_name.csv' não encontrado. Execute o script 'steam_spy_name_id.py' primeiro.")
+        print("File 'all_data_id_name.csv' not found. You should run 'get_steam_spy_data.py' first.")
         return 
     except pd.errors.EmptyDataError:
-        print("Arquivo 'all_data_id_name.csv' está vazio. Verifique o conteúdo do arquivo.")
+        print("File 'all_data_id_name.csv' está vazio. Check file contents.")
         return
 
     # iterate through each row of app_list, confined by start and stop
@@ -180,3 +179,9 @@ def prepare_data_file(download_path, filename, index, columns):
         with open(rel_path, 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=columns)
             writer.writeheader()
+
+def check_folder():
+    if not os.path.exists("data/steam_spy"):
+        os.makedirs("data/steam_spy")
+    if not os.path.exists("data/steam_store"):
+        os.makedirs("data/steam_store")
