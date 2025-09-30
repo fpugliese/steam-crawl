@@ -26,7 +26,7 @@ def request(url, params=None):
     elif response == None:
         # This probably indicates that we exceeded the limit rate on the requests, 
         # We just wait 10 seconds and try again.
-        print("Sem resposta, tentando novamente em 10 segundos...")
+        print("No answer, Trying again in 10 seconds...")
         time.sleep(10)
         return request(url, params)
     else:
@@ -45,12 +45,12 @@ def get_app_data(start, stop, parser, pause):
     app_data = []
     
     try:
-        app_list = pd.read_csv('./data/steam_spy/all_data_id_name.csv')
+        app_list = pd.read_csv('data/steam_spy/id_name.csv')
     except FileNotFoundError:
-        print("File 'all_data_id_name.csv' not found. You should run 'get_steam_spy_data.py' first.")
+        print("File 'id_name.csv' not found. You should run 'get_steam_spy_data.py' first.")
         return 
     except pd.errors.EmptyDataError:
-        print("File 'all_data_id_name.csv' está vazio. Check file contents.")
+        print("File 'id_name.csv' is empty. Check file contents.")
         return
 
     # iterate through each row of app_list, confined by start and stop
