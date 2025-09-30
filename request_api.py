@@ -182,6 +182,8 @@ def prepare_data_file(download_path, filename, index, columns):
 
 def check_folder():
     if not os.path.exists("data/steam_spy"):
+        print("Creating data/steam_spy directory...\n")
         os.makedirs("data/steam_spy")
     if not os.path.exists("data/steam_store"):
+        print("Creating data/steam_store directory...\n")
         os.makedirs("data/steam_store")

@@ -26,12 +26,12 @@ def parse_steam_request(appid, name):
 
 def main():
     # Set file parameters
-    download_path = './data/steam_store/'
+    download_path = 'data/steam_store/'
     steam_app_data = 'steam_app_data.csv'
     steam_index = 'steam_index.txt'
 
     try:
-        app_list = pd.read_csv('./data/steam_spy/id_name.csv')
+        app_list = pd.read_csv('data/steam_spy/id_name.csv')
     except FileNotFoundError:
         print("File 'id_name.csv' not found. Run 'get_steam_spy_data.py' first.")
         return 
